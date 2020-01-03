@@ -2,9 +2,10 @@
 // Program e-Ticket
 //--------------------------------------------------------------------------------
 // By:
-//    Muhammad Rifqi Zein       (191040xx)
-//    Rifqi Alfinur Charisma    (191040xx)
+//    Muhammad Rifqi Zein       (19104006)
+//    Rifqi Alfinur Charisma    (19104031)
 //    Satria Adi Nugraha        (19104027)
+//      Kelompok 8
 //=================================================================================
 
 #include <iostream>
@@ -41,6 +42,19 @@ using namespace std;
                             "Solo",
                             "Madiun"
                         };
+
+    //-----------------------------------------------------------------------------
+    // Info Kereta
+    //-----------------------------------------------------------------------------
+    // Sesuai judul >:(
+    //-----------------------------------------------------------------------------
+
+    string namaKereta[]={"Bengawan","Progo",  "Gaya Baru Malam","Krakatan","Jaka Tingkir"};
+    string jam[]={       "08:30",   "10:00",  "12:30",          "14:30",   "16:30"};
+    string harga[]={     "70.000",  "100.000","150.000",        "180.000", "200.000"};
+
+    //Note: Jika ingin melakukan pengeditan terhadap info kereta harap sesuaikan
+    //urutan penulisan
 
 //=================================================================================
 //== WARNING: Do NOT touch unless you know what you're doing! =====================
@@ -109,7 +123,7 @@ string ktpsimchecker(string k)
 void orderTicket()
 {
     //-----------------------------------------------------------------------------
-    // + Choose Your Destination
+    // Choose Your Destination
     //-----------------------------------------------------------------------------
     // User diminta menginput tujuan keberangkatan dengan menginputkan angka yang
     // tertera di layar
@@ -150,27 +164,24 @@ void orderTicket()
     else
         goto cityConfirm;
 
-//=================================================================================
-// + Date (Time, not dinner! >_<)
-//---------------------------------------------------------------------------------
-// Diisi tanggal keberangkatan dan kelas kereta
-//=================================================================================
+    //-----------------------------------------------------------------------------
+    // Date (Time, not dinner! >_<)
+    //-----------------------------------------------------------------------------
+    // Diisi waktu keberangkatan dan kelas kereta
+    //-----------------------------------------------------------------------------
 
-    cout << "\n\t\t|-----------------------|--------------------|---------------|";
-    cout << "\n\t\t| Nama Kereta           | Jam Berangkat      | Harga         |";
-    cout << "\n\t\t|-----------------------|--------------------|---------------|";
-    cout << "\n\t\t| 1. Bengawan           |      08.30         | Rp. 70.000    |";
-    cout << "\n\t\t| 2. Progo              |      10.00         | Rp. 100.000   |";
-    cout << "\n\t\t| 3. Gaya Baru Malam    |      12.30         | Rp. 150.000   |";
-    cout << "\n\t\t| 4. Krakatan           |      14.30         | Rp. 180.000   |";
-    cout << "\n\t\t| 5. Jaka Tigkir        |      16.30         | Rp. 200.000   |";
-    cout << "\n\t\t|-----------------------|--------------------|---------------|";
-/**< user menginputkan jenis kereta yang diingikan */
+    cout<<"Pilih kereta:"<<endl;
+    for(int m=0;m<(sizeof(namaKereta)/sizeof(*namaKereta));m++)
+        cout<<m+1<<") "<<namaKereta[m]<<" ("<<jam[m]<<") -- Rp. "<<harga[m]<<endl;
+    pk:
+    cout<<"\n> ";
+    cin>>selector;
+    if(selector<1||selector>(sizeof(namaKereta)/sizeof(*namaKereta))){
+        cout<<"Mohon input yang benar!\n";
+        goto pk;
+    }
+
     cout<<endl<<endl;
-
-
-
-    //Placeholder
 
 //=================================================================================
 // + Passenger Identity Input
@@ -224,6 +235,9 @@ void orderTicket()
     //============================================================
     /**< data user ditampilkan lagi mulai dari kereta yang diinginkan, waktu, total harga,, nama lengkap dll. */
     /**< kode briva akan muncul dan deadline pembayaran maksimal 1 jam */
+
+    //-----------------------------------------------------------------------------
+    //
 
 }
 
