@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <conio.h>
+#include <fstream>
 
 using namespace std;
 
@@ -41,7 +42,7 @@ using namespace std;
                             "Yogyakarta",
                             "Solo",
                             "Madiun"
-                        };
+                        },
 
     //-----------------------------------------------------------------------------
     // Info Kereta
@@ -49,9 +50,9 @@ using namespace std;
     // Sesuai judul >:(
     //-----------------------------------------------------------------------------
 
-    string namaKereta[]={"Bengawan","Progo",  "Gaya Baru Malam","Krakatan","Jaka Tingkir"};
-    string jam[]={       "08:30",   "10:00",  "12:30",          "14:30",   "16:30"};
-    string harga[]={     "70.000",  "100.000","150.000",        "180.000", "200.000"};
+    namaKereta[]={"Bengawan","Progo",  "Gaya Baru Malam","Krakatan","Jaka Tingkir"};
+    jam[]={       "08:30",   "10:00",  "12:30",          "14:30",   "16:30"};
+    harga[]={     "70.000",  "100.000","150.000",        "180.000", "200.000"};
 
     //Note: Jika ingin melakukan pengeditan terhadap info kereta harap sesuaikan
     //urutan penulisan
@@ -61,12 +62,21 @@ using namespace std;
 //================================================ You have been warned! ==========
 //=================================================================================
 
-    char nav;                    //Untuk navigasi menu program
+    char nav;                 //Untuk navigasi menu program
 
-    string namaLengkap[1000],    //Nama lengkap calon penumpang
-           tujuan,               //Tujuan kereta
-           tipeID[1000],         //Tipe ID (isi dengan KTP atau SIM)
-           noID[1000];           //Nomor ID KTP atau SIM
+    int
+        selector=0,           //Variable pembantu memproses input user
+        selectedTrain,        //Kereta terpilih
+        jmlpenumpang;         //Jumlah penumpang
+
+    string
+        namaLengkap[1000],    //Nama lengkap calon penumpang
+        tujuan,               //Tujuan kereta
+        tipeID[1000],         //Tipe ID (isi dengan KTP atau SIM)
+        noID[1000],           //Nomor ID KTP atau SIM
+        gerbong[1000],        //Nomor gerbong
+        kursi[1000];          //Nomor kursi
+
 
 //=================================================================================
 // + Destination Name Sorting
@@ -109,8 +119,10 @@ string ktpsimchecker(string k)
         k="KTP";
     if(k=="sim")
         k="SIM";
-    if(k!="SIM"||k!="KTP")
-        k="Invalid!";
+    if(k!="SIM"&&k!="KTP"){
+        k="INVALID";
+        cout<<"Input invalid!\n";
+    }
     return k;
 }
 
@@ -120,22 +132,34 @@ string ktpsimchecker(string k)
 // Menu pemesanan tiket
 //=================================================================================
 
+void inputDestination();
+void inputTrain();
+void inputID();
+
 void orderTicket()
 {
-    //-----------------------------------------------------------------------------
-    // Choose Your Destination
-    //-----------------------------------------------------------------------------
-    // User diminta menginput tujuan keberangkatan dengan menginputkan angka yang
-    // tertera di layar
-    //-----------------------------------------------------------------------------
+    inputDestination();
+    inputTrain();
+    inputID();
+    cout<<"Input berhasil! Tekan sembarang tombol untuk melanjutkan!\n\n";
+    getche();
+}
 
-    int selector=0;
-    citySort();
+//=================================================================================
+// + Choose Your Destination
+//---------------------------------------------------------------------------------
+// User diminta menginput tujuan keberangkatan dengan menginputkan angka yang
+// tertera di layar
+//=================================================================================
+
+void inputDestination()
+{
+    citySort();                     //Mengurutkan daftar kota tujuan berdasarkan abjad
     pilihTujuan:
     cout<<"Pilih tujuan keberangkatan (input dengan angka!):\n";
 
-    for(int j=0;j<(sizeof(kotaTujuan)/sizeof(*kotaTujuan));j++)
-        cout<<j+1<<") "<<kotaTujuan[j]<<endl;
+    for(int j=0;j<(sizeof(kotaTujuan)/sizeof(*kotaTujuan));j++) //Cetak seluruh kota
+        cout<<j+1<<") "<<kotaTujuan[j]<<endl;                   //tujuan yang tersedia
 
     cout<<"\n> ";
     cin>>selector;
@@ -149,12 +173,17 @@ void orderTicket()
         goto pilihTujuan;
     }
 
+    //-----------------------------------------------------------------------------
+    // Program akan otomatis memproses input user tanpa perlu menggunakan
+    // switch-case atau if-else, all thanks to this 1-line of code below:
+    //-----------------------------------------------------------------------------
+
     tujuan=kotaTujuan[selector-1];
 
     //-----------------------------------------------------------------------------
     // Konfirmasi jika kota yang dipilih sudah benar
     //-----------------------------------------------------------------------------
-    cout<<"Tujuan anda: "<<tujuan<<"\nSudah benar? (Y/N)\n\n";
+    cout<<"\nTujuan anda: "<<tujuan<<"\nSudah benar? (Y/N)\n\n";
     cityConfirm:
     nav=getch();
     if(nav=='y'||nav=='Y')
@@ -163,13 +192,16 @@ void orderTicket()
         goto pilihTujuan;
     else
         goto cityConfirm;
+}
 
-    //-----------------------------------------------------------------------------
-    // Date (Time, not dinner! >_<)
-    //-----------------------------------------------------------------------------
-    // Diisi waktu keberangkatan dan kelas kereta
-    //-----------------------------------------------------------------------------
+//=================================================================================
+// + Pick Your Train
+//---------------------------------------------------------------------------------
+// User (calon penumpang) diminta menginput jenis kereta serta jam keberangkatan
+//=================================================================================
 
+void inputTrain()
+{
     cout<<"Pilih kereta:"<<endl;
     for(int m=0;m<(sizeof(namaKereta)/sizeof(*namaKereta));m++)
         cout<<m+1<<") "<<namaKereta[m]<<" ("<<jam[m]<<") -- Rp. "<<harga[m]<<endl;
@@ -180,17 +212,22 @@ void orderTicket()
         cout<<"Mohon input yang benar!\n";
         goto pk;
     }
-
-    cout<<endl<<endl;
+    selectedTrain=selector-1;
+    cout<<endl;
+}
 
 //=================================================================================
 // + Passenger Identity Input
 //---------------------------------------------------------------------------------
-// User (calon penumpang) akan diminta menginputkan data diri mereka seperti nama
-// dan nomor ID yang berupa SIM atau KTP
+// User akan diminta menginputkan data diri mereka seperti nama dan nomor ID yang
+// berupa SIM atau KTP
 //=================================================================================
 
-    int jmlpenumpang;
+void inputID()
+{
+    //-----------------------------------------------------------------------------
+    // User akan ditanya ingin memesan tiket untuk berapa banyak orang
+    //-----------------------------------------------------------------------------
     passengernumber:
     cout<<"Jumlah penumpang (max "<<maxslot<<"): ";
     cin>>jmlpenumpang;
@@ -208,7 +245,7 @@ void orderTicket()
     //    cin.ignore();
     //    cout<<"Mohon masukan angka 1 sampai "<<maxslot<<" saja!\n\n";
     //    goto passengernumber;
-    //}
+    //
 
     //-----------------------------------------------------------------------------
     // Input detail identitas penumpang
@@ -220,42 +257,81 @@ void orderTicket()
         cout<<"===[Penumpang ke-"<<i+1<<"]====\n";
         cout<<"Nama lengkap     : ";
         getline(cin,namaLengkap[i]);
-        cout<<"Tipe ID (KTP/SIM): ";
-        getline(cin,tipeID[i]);
-        tipeID[i]=ktpsimchecker(tipeID[i]);
-        cout<<"No ID            : ";
-        getline(cin,noID[i]);
+        do{
+            cout<<"Tipe ID (KTP/SIM): ";            //Semacam failsafe apabila user
+            getline(cin,tipeID[i]);                 //Menginput selain KTP atau SIM
+            tipeID[i]=ktpsimchecker(tipeID[i]);     //pada form input tipeID
+        }while(tipeID[i]=="INVALID");
+
+        cout<<"No ID            : ";getline(cin,noID[i]);
+        cout<<"Gerbong          : ";getline(cin,gerbong[i]);
+        cout<<"No kursi         : ";getline(cin,kursi[i]);
         cout<<"=======================\n\n";
-        /**< user menginputkan kuris yang diinginkan */
     }
-    //-----------------------------------------------------------------------------
-
-    //Placeholder
-    //Blablabla
-    //============================================================
-    /**< data user ditampilkan lagi mulai dari kereta yang diinginkan, waktu, total harga,, nama lengkap dll. */
-    /**< kode briva akan muncul dan deadline pembayaran maksimal 1 jam */
-
-    //-----------------------------------------------------------------------------
-    //
 
 }
 
-void checkTicket()
-{
 //=================================================================================
 // + Ticket Check
 //---------------------------------------------------------------------------------
 // Untuk melihat atau mengecek tiket yang sudah dipesan sebelumnya
 //=================================================================================
 
-    //Placeholder
-    /**< data user, kereta yang diinginkan, waktu berangkat, kode briva, deadlne, pembayaran,
-     status tiket atif atau tidak aktif */
+void checkTicket()
+{
+    bool telahMemesan=namaLengkap[0]!="";
+
+    if(!telahMemesan)
+        cout<<"Maaf, anda sepertinya belum memesan tiket. Harap pesan tiket terlebih dahulu sebelum menekan menu ini\n\n";
+    else{
+        for(int p=0;p<jmlpenumpang;p++){
+            cout<<"------------------------------------\n";
+            cout<<" Penumpang "<<p+1<<endl;
+            cout<<"------------------------------------\n";
+            cout<<" Nama Lengkap: "<<namaLengkap[p]<<endl;
+            cout<<" Tujuan       : "<<tujuan<<endl;
+            cout<<" No "<<tipeID[p]<<"       : "<<noID[p]<<endl;
+            cout<<" Kereta       : "<<namaKereta[selectedTrain]<<endl;
+            cout<<" Gerbong      : "<<gerbong[p]<<endl;
+            cout<<" Kursi        : "<<kursi[p]<<endl;
+            cout<<" Jam Berangkat: "<<jam[selectedTrain]<<endl;
+            cout<<" Harga        : Rp "<<harga[selectedTrain]<<endl;
+            cout<<"------------------------------------\n\n";
+        }
+        cout<<"\nCetak tiket? (Y/N)\n\n";
+        cetk:
+        cout<<"> ";
+        nav=getch();
+
+        if(nav=='y'||nav=='Y'){
+            cout<<"Y\n";
+            ofstream out ("Tiket.txt");
+            out<<"======================================\n";
+            out<<"===[TIKET KERETA DAOP 5 PURWOKERTO]===\n";
+            out<<"======================================\n\n";
+            for(int p=0;p<jmlpenumpang;p++){
+                out<<"------------------------------------\n";
+                out<<" Penumpang "<<p+1<<endl;
+                out<<"------------------------------------\n";
+                out<<" Nama Lengkap: "<<namaLengkap[p]<<endl;
+                out<<" No "<<tipeID[p]<<"       : "<<noID[p]<<endl;
+                out<<" Tujuan       : "<<tujuan<<endl;
+                out<<" Kereta       : "<<namaKereta[selectedTrain]<<endl;
+                out<<" Gerbong      : "<<gerbong[p]<<endl;
+                out<<" Kursi        : "<<kursi[p]<<endl;
+                out<<" Jam Berangkat: "<<jam[selectedTrain]<<endl;
+                out<<" Harga        : Rp "<<harga[selectedTrain]<<endl;
+                out<<"------------------------------------\n\n";
+            }out.close();
+            cout<<"Tercetak!\n\n";
+        }else if(nav=='n'||nav=='N')
+            cout<<"N\n\n";
+        else
+            goto cetk;
+    }
 }
 
-int main()
-{
+
 //=================================================================================
 // + Main Menu
 //---------------------------------------------------------------------------------
@@ -264,6 +340,8 @@ int main()
 // input user kemudian ditangkap oleh getch() dan diproses dengan switch-case
 //=================================================================================
 
+int main()
+{
     menu:
     cout<<"=====================================================\n";
     cout<<"===[MENU PEMESANAN TIKET KERETA DAOP 5 PURWOKERTO]===\n";
