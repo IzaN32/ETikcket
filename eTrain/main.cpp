@@ -50,8 +50,8 @@ using namespace std;
     // Sesuai judul >:(
     //-----------------------------------------------------------------------------
 
-    namaKereta[]={"Bengawan","Progo",  "Gaya Baru Malam","Krakatan","Jaka Tingkir"};
-    jam[]={       "08:30",   "10:00",  "12:30",          "14:30",   "16:30"};
+    namaKereta[]={"Bengawan","Progo",  "Gaya Baru Malam","Krakatan","Jaka Tingkir"},
+    jam[]={       "08:30",   "10:00",  "12:30",          "14:30",   "16:30"},
     harga[]={     "70.000",  "100.000","150.000",        "180.000", "200.000"};
 
     //Note: Jika ingin melakukan pengeditan terhadap info kereta harap sesuaikan
@@ -239,13 +239,6 @@ void inputID()
         cout<<"Mohon masukan angka 1 sampai "<<maxslot<<" saja!\n\n";
         goto passengernumber;
     }
-
-    //if(!(cin>>jmlpenumpang)){
-    //    cin.clear();
-    //    cin.ignore();
-    //    cout<<"Mohon masukan angka 1 sampai "<<maxslot<<" saja!\n\n";
-    //    goto passengernumber;
-    //
 
     //-----------------------------------------------------------------------------
     // Input detail identitas penumpang
