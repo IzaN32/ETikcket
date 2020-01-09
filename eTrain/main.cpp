@@ -2,7 +2,7 @@
 // Program e-Ticket
 //--------------------------------------------------------------------------------
 // By:
-//    Muhammad Rifqi Zein       (19104006)
+//    Mohammad Rifqi Zein       (19104006)
 //    Rifqi Alfinur Charisma    (19104031)
 //    Satria Adi Nugraha        (19104027)
 //      Kelompok 8
